@@ -1,0 +1,590 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Do Zero ao Culto em 30 Dias</title>
+<meta name="robots" content="noindex">
+
+<!-- ================= RASTREAMENTO (aditivo, nao altera o checkout) ================= -->
+<script>
+window.TDV_PIXEL_ID = '1295175047898011';
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+</script>
+<script>
+(function () {
+  var qs = new URLSearchParams(location.search);
+  function cookie(n) {
+    var m = document.cookie.match('(^|;)\\s*' + n + '\\s*=\\s*([^;]+)');
+    return m ? decodeURIComponent(m.pop()) : '';
+  }
+  // carimbo de sessao: sobrevive ao recarregamento da pagina
+  var id = '';
+  try { id = sessionStorage.getItem('tdv_id') || ''; } catch (e) {}
+  if (!id) {
+    id = 'tdv.' + Date.now() + '.' + Math.random().toString(36).slice(2, 10);
+    try { sessionStorage.setItem('tdv_id', id); } catch (e) {}
+  }
+  // fbclid chegou pela URL? guarda, porque ele some na primeira navegacao interna
+  var fbclid = qs.get('fbclid') || '';
+  if (fbclid) { try { sessionStorage.setItem('tdv_fbclid', fbclid); } catch (e) {} }
+
+  // le fbp e fbc SEMPRE na hora do envio: o fbq so grava o _fbp depois do init
+  window.tdvAgora = function () {
+    var f_clid = '';
+    try { f_clid = sessionStorage.getItem('tdv_fbclid') || ''; } catch (e) {}
+    var fbc = qs.get('fbc') || cookie('_fbc');
+    if (!fbc && f_clid) fbc = 'fb.1.' + Date.now() + '.' + f_clid;
+    return {
+      id: id,
+      fbp: qs.get('fbp') || cookie('_fbp') || '',
+      fbc: fbc || '',
+      ua: (navigator.userAgent || '').slice(0, 160),
+      url: location.href.slice(0, 200)
+    };
+  };
+
+  try {
+    fbq('init', window.TDV_PIXEL_ID, { external_id: id });
+    fbq('track', 'PageView', {}, { eventID: 'pv.' + id });
+  } catch (e) {}
+})();
+</script>
+<!-- =============== FIM DO BLOCO DE RASTREAMENTO =============== -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,700&display=swap">
+<style>
+:root{
+  --verde:#4CAF50; --verde-esc:#43A047; --verde-badge:#2ECC71; --verde-claro:#EDF7EE;
+  --txt:#1C1C1C; --txt2:#4A4A4A; --txt3:#8C8C8C; --ph:#A5A5A5;
+  --linha:#E2E2E2; --campo-bd:#D6D6D6; --fundo:#F0F0F0; --card:#FFFFFF;
+  --erro:#D93025;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--fundo); color:var(--txt);
+  font-family:"Nunito Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  font-size:15px; line-height:1.45;
+}
+
+/* banner */
+.banner{background:#000;text-align:center;overflow:hidden}
+.banner img{display:block;width:100%;max-width:1000px;margin:0 auto;height:auto}
+.banner .fallback{
+  max-width:1000px;margin:0 auto;padding:46px 20px 52px;
+  background:radial-gradient(600px 240px at 50% 120%, rgba(124,92,255,.45), transparent 70%),#000;
+}
+.banner .fallback b{display:block;color:#fff;font-size:clamp(1.6rem,6vw,2.5rem);font-weight:700;letter-spacing:.06em;line-height:1.12;text-transform:uppercase}
+
+/* card */
+.wrap{max-width:530px;margin:0 auto;padding:0 12px 40px}
+.card{background:var(--card);border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.10);margin-top:-26px;position:relative;padding:16px 18px 22px}
+
+.pais{display:flex;justify-content:flex-end;align-items:center;gap:6px;font-size:.8rem;color:var(--txt2);font-weight:600;margin-bottom:12px}
+
+/* produto */
+.produto{display:flex;gap:12px;align-items:flex-start;padding-bottom:18px}
+.produto .thumb{width:62px;height:83px;flex:0 0 62px;border-radius:4px;object-fit:contain;background:#111;display:grid;place-items:center;font-size:1.6rem;color:#fff}
+.produto h1{font-size:.94rem;font-weight:700;line-height:1.3;margin:0}
+.produto .autor{font-size:.78rem;color:var(--txt3);margin-top:3px}
+.produto .preco{font-size:1.28rem;font-weight:700;margin-top:7px}
+.produto .parcela{font-size:.78rem;color:var(--txt2);margin-top:2px}
+.produto .desc{font-size:.76rem;color:var(--txt2);line-height:1.45;margin-top:9px}
+
+h2.sec{font-size:.95rem;font-weight:700;margin:20px 0 12px}
+
+/* campos */
+.campo{margin-bottom:12px}
+.campo:last-child{margin-bottom:0}
+.campo label{display:block;font-size:.8rem;color:var(--txt2);margin-bottom:5px}
+input,select{
+  width:100%;background:#fff;border:1px solid var(--campo-bd);border-radius:4px;
+  color:var(--txt);font-family:inherit;font-size:.94rem;padding:12px 12px;outline:none;
+  transition:border-color .15s,box-shadow .15s
+}
+input::placeholder{color:var(--ph)}
+input:focus,select:focus{border-color:#6B6B6B;box-shadow:0 0 0 2px rgba(0,0,0,.06)}
+input.ruim{border-color:var(--erro)}
+select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px}
+.dupla{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tel{display:grid;grid-template-columns:86px 1fr;gap:8px}
+.tel .ddi{display:flex;align-items:center;justify-content:center;gap:5px;border:1px solid var(--campo-bd);border-radius:4px;font-size:.9rem;color:var(--txt2);background:#fff}
+.ajuda{font-size:.75rem;color:var(--txt3);margin-top:5px}
+
+/* cupom */
+.cupom{border:1px solid var(--campo-bd);border-radius:4px;padding:13px 12px;display:flex;align-items:center;gap:9px;cursor:pointer;font-size:.88rem;color:var(--txt2)}
+.cupom .seta{margin-left:auto;transition:transform .2s}
+.cupom.aberto .seta{transform:rotate(180deg)}
+#cupom-campo{margin-top:10px}
+
+/* pagamento */
+.pgto{border:1px solid var(--campo-bd);border-radius:4px;overflow:hidden}
+.pgto + .pgto{margin-top:10px}
+.pgto.on{border-color:#9E9E9E;box-shadow:0 0 0 1px #9E9E9E}
+.pgto .cabeca{display:flex;align-items:center;gap:10px;padding:14px 13px;cursor:pointer;font-weight:700;font-size:.9rem}
+.radio{width:16px;height:16px;flex:0 0 16px;border-radius:50%;border:1.5px solid #9E9E9E;display:grid;place-items:center}
+.pgto.on .radio{border-color:#1C1C1C}
+.pgto.on .radio::after{content:"";width:9px;height:9px;border-radius:50%;background:#1C1C1C}
+.pgto .corpo{padding:0 13px 16px;border-top:1px solid var(--linha);padding-top:14px}
+.pgto .aviso-pix{font-size:.82rem;color:var(--txt2);line-height:1.5}
+
+/* bumps */
+.bump{border:1px solid var(--campo-bd);border-radius:4px;margin-bottom:12px;overflow:hidden}
+.bump.on{border-color:var(--verde);box-shadow:0 0 0 1px var(--verde)}
+.bump .topo{display:flex;gap:12px;padding:14px 13px}
+.bump .thumb{width:60px;height:80px;flex:0 0 60px;border-radius:4px;background:#20204A;display:grid;place-items:center;font-size:1.4rem;object-fit:contain}
+.bump .titulo{font-size:.86rem;font-weight:700;line-height:1.3}
+.bump .chamada{font-size:.8rem;color:var(--txt2);margin-top:6px;line-height:1.35}
+.bump .sub{font-size:.78rem;color:var(--txt2);margin-top:5px;line-height:1.4}
+.bump .escassez{font-size:.72rem;color:var(--txt3);margin-top:7px}
+.bump .valores{margin-top:5px;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.bump .de{font-size:.76rem;color:var(--txt3);text-decoration:line-through}
+.bump .off{font-size:.68rem;font-weight:700;background:var(--verde-badge);color:#fff;padding:1px 7px;border-radius:3px}
+.bump .por{font-size:.95rem;font-weight:700;width:100%;margin-top:2px}
+.bump .barra{background:var(--verde-claro);border-top:1px solid var(--linha);padding:13px;display:flex;align-items:center;gap:9px;cursor:pointer;font-size:.85rem;color:var(--txt);font-weight:600}
+.bump .barra input{width:17px;height:17px;flex:0 0 17px;margin:0;accent-color:var(--verde);cursor:pointer}
+
+/* detalhes */
+.detalhes{border:1px solid var(--campo-bd);border-radius:4px;padding:13px}
+.detalhes .li{display:flex;justify-content:space-between;gap:14px;font-size:.82rem;padding:5px 0}
+.detalhes .li b{font-weight:700;flex:1}
+.detalhes .li span{white-space:nowrap}
+.detalhes .tot{display:flex;justify-content:space-between;border-top:1px solid var(--linha);margin-top:9px;padding-top:11px;font-weight:700;font-size:.95rem}
+
+button.cta{
+  width:100%;border:0;border-radius:4px;padding:15px;margin-top:14px;cursor:pointer;
+  font-family:inherit;font-size:1rem;font-weight:700;color:#fff;background:var(--verde)
+}
+button.cta:hover{background:var(--verde-esc)}
+button.cta:disabled{opacity:.6;cursor:default}
+
+.protegido{text-align:center;font-size:.72rem;color:var(--txt3);margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+.rodape{max-width:530px;margin:0 auto;padding:16px 22px 30px;font-size:.72rem;color:var(--txt3);line-height:1.6}
+.rodape a{color:var(--txt3)}
+
+.alerta{background:#FDECEA;border:1px solid #F5C6C0;color:#8E2018;border-radius:4px;padding:11px 13px;font-size:.85rem;margin-bottom:14px}
+
+/* pix */
+#pix{text-align:center}
+#pix .qr{background:#fff;border:1px solid var(--linha);padding:10px;border-radius:6px;display:inline-block;margin:4px 0 14px}
+#pix .qr img{display:block;width:220px;height:220px}
+#pix .rotulo{font-size:.8rem;color:var(--txt2);text-align:left;margin-bottom:6px}
+#pix .codigo{border:1px solid var(--campo-bd);border-radius:4px;padding:11px;font-size:.7rem;word-break:break-all;color:var(--txt2);text-align:left;max-height:84px;overflow:auto;font-family:ui-monospace,SFMono-Regular,monospace}
+#pix ol{text-align:left;font-size:.83rem;color:var(--txt2);margin:16px 0 0;padding-left:20px;line-height:1.8}
+#pix .esperando{display:flex;align-items:center;justify-content:center;gap:9px;font-size:.83rem;color:var(--txt2);margin-top:16px}
+.spin{width:14px;height:14px;border:2px solid var(--linha);border-top-color:var(--verde);border-radius:50%;animation:g .8s linear infinite}
+@keyframes g{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.spin{animation:none}}
+
+#sucesso{text-align:center;padding:24px 6px}
+#sucesso .check{width:58px;height:58px;border-radius:50%;background:var(--verde-claro);border:2px solid var(--verde);color:var(--verde);display:grid;place-items:center;font-size:1.8rem;margin:0 auto 14px}
+#sucesso h2{font-size:1.18rem;font-weight:700;margin:0 0 8px}
+#sucesso p{color:var(--txt2);font-size:.88rem;margin:0 auto;max-width:36ch}
+
+.hide{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <img src="/img/banner.jpg" alt="Do Zero ao Culto em 30 Dias" onerror="this.remove();document.getElementById('bfall').classList.remove('hide')">
+  <div class="fallback hide" id="bfall"><b>Do Zero<br>ao Culto<br>em 30 dias</b></div>
+</div>
+
+<div class="wrap">
+<div class="card">
+
+  <div class="pais">🇧🇷 Brasil</div>
+
+  <div id="alerta" class="alerta hide"></div>
+
+  <!-- ETAPA 1 -->
+  <div id="etapa1">
+
+    <div class="produto">
+      <img class="thumb" id="p-thumb" src="" alt="">
+      <div>
+        <h1 id="p-nome"></h1>
+        <div class="autor">Autor: Ricardo Augusto dos Santos</div>
+        <div class="preco" id="p-preco"></div>
+        <div class="parcela" id="p-parcela"></div>
+        <div class="desc" id="p-desc"></div>
+      </div>
+    </div>
+
+    <h2 class="sec">Dados pessoais</h2>
+    <div class="campo">
+      <label for="email">Seu email</label>
+      <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="Digite seu email para receber a compra">
+    </div>
+    <div class="campo">
+      <label for="email2">Confirme seu email</label>
+      <input id="email2" type="email" inputmode="email" placeholder="Digite novamente seu email">
+    </div>
+    <div class="campo">
+      <label for="nome">Nome completo</label>
+      <input id="nome" type="text" autocomplete="name" placeholder="Digite seu nome completo">
+    </div>
+    <div class="campo">
+      <label for="celular">Celular</label>
+      <div class="tel">
+        <div class="ddi">🇧🇷 +55</div>
+        <input id="celular" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(11) 96123-4567" maxlength="16">
+      </div>
+    </div>
+    <div class="campo hide" id="campo-cpf">
+      <label for="cpf">CPF</label>
+      <input id="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
+    </div>
+
+    <h2 class="sec">Escolha a forma de pagamento</h2>
+
+    <div class="pgto" data-metodo="pix" id="box-pix">
+      <div class="cabeca"><span class="radio"></span><span>⚡</span><span>Pix</span></div>
+      <div class="corpo" id="corpo-pix">
+        <div class="aviso-pix">Aprovação imediata. O QR Code aparece na próxima tela e o seu acesso é liberado assim que o pagamento cair.</div>
+      </div>
+    </div>
+
+    <div class="pgto" data-metodo="cartao" id="box-cartao">
+      <div class="cabeca"><span class="radio"></span><span>💳</span><span>Cartão de crédito</span></div>
+      <div class="corpo hide" id="corpo-cartao">
+        <div class="campo">
+          <label for="cartao_numero">Número do cartão</label>
+          <input id="cartao_numero" type="text" inputmode="numeric" autocomplete="cc-number" placeholder="0000 0000 0000 0000" maxlength="19">
+        </div>
+        <div class="dupla">
+          <div class="campo">
+            <label for="cartao_mes">Validade</label>
+            <input id="cartao_mes" type="text" inputmode="numeric" autocomplete="cc-exp" placeholder="MM/AA" maxlength="5">
+          </div>
+          <div class="campo">
+            <label for="cartao_cvv">CVV</label>
+            <input id="cartao_cvv" type="text" inputmode="numeric" autocomplete="cc-csc" placeholder="3 ou 4 dígitos" maxlength="4">
+          </div>
+        </div>
+        <div class="campo">
+          <label for="cartao_titular">Nome do titular</label>
+          <input id="cartao_titular" type="text" autocomplete="cc-name" placeholder="Digite o nome impresso no cartão">
+        </div>
+        <div class="campo">
+          <label for="parcelas">Selecione o número de parcelas</label>
+          <select id="parcelas"></select>
+        </div>
+        <div class="campo">
+          <label for="cpf-cartao">CPF do titular</label>
+          <input id="cpf-cartao" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
+        </div>
+        <div class="dupla">
+          <div class="campo">
+            <label for="cep">CEP</label>
+            <input id="cep" type="text" inputmode="numeric" placeholder="00000-000" maxlength="9">
+          </div>
+          <div class="campo">
+            <label for="numero">Número</label>
+            <input id="numero" type="text" inputmode="numeric" placeholder="123">
+          </div>
+        </div>
+        <div class="ajuda hide" id="endereco-ok"></div>
+        <div class="ajuda" style="margin-top:10px">*O valor parcelado possui acréscimo.</div>
+      </div>
+    </div>
+
+    <h2 class="sec">Aproveite e compre junto:</h2>
+    <div id="bumps"></div>
+
+    <h2 class="sec">Detalhes da compra</h2>
+    <div class="detalhes" id="detalhes"></div>
+
+    <button class="cta" id="btn">Comprar agora</button>
+    <div class="protegido">Pagamento seguro processado por <b>Pagar.me</b></div>
+  </div>
+
+  <!-- ETAPA 2: PIX -->
+  <div id="pix" class="hide">
+    <h2 class="sec" style="text-align:center;margin-top:6px">Pague o Pix para liberar seu acesso</h2>
+    <div class="qr"><img id="qr-img" alt="QR Code do Pix"></div>
+    <div class="rotulo">Ou copie o código Pix:</div>
+    <div class="codigo" id="qr-txt"></div>
+    <button class="cta" id="btn-copiar">Copiar código Pix</button>
+    <ol>
+      <li>Abra o aplicativo do seu banco</li>
+      <li>Escolha Pix e depois Pix Copia e Cola</li>
+      <li>Cole o código e confirme o pagamento</li>
+    </ol>
+    <div class="esperando"><div class="spin"></div><span>Assim que o pagamento cair, esta tela muda sozinha</span></div>
+  </div>
+
+  <!-- ETAPA 3 -->
+  <div id="sucesso" class="hide">
+    <div class="check">✓</div>
+    <h2>Pagamento confirmado</h2>
+    <p>Seu acesso está sendo liberado agora. Em poucos minutos você recebe o login e a senha no email <b id="email-ok"></b>. Confira também a caixa de spam.</p>
+  </div>
+
+</div>
+</div>
+
+<div class="rodape">
+  Tem dúvidas sobre o produto? <a href="mailto:contato@tecladodeverdade.com.br">Entre em contato</a><br><br>
+  Ao clicar em "Comprar agora", você declara que leu e concorda com os termos de compra, que é maior de idade ou está acompanhado por um responsável legal, e que o pagamento será processado pela Pagar.me em nome de Ricardo Augusto dos Santos.
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const brl = (v) => v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+let CFG = null, metodo = 'pix', marcados = new Set(), enderecoOk = null, timer = null;
+
+fetch('/api/produtos').then(r => r.json()).then((cfg) => {
+  CFG = cfg;
+  if (cfg.principal.img) { $('#p-thumb').src = cfg.principal.img; } else { $('#p-thumb').replaceWith(Object.assign(document.createElement('div'),{className:'thumb',textContent:'🎹'})); }
+  $('#p-nome').textContent = cfg.principal.nome_completo;
+  $('#p-preco').textContent = brl(cfg.principal.preco);
+  $('#p-desc').textContent = cfg.principal.descricao;
+  const p2 = Math.round(cfg.principal.preco * cfg.juros_mes / (1 - Math.pow(1 + cfg.juros_mes, -2)) * 100) / 100;
+  $('#p-parcela').textContent = `ou em ${cfg.max_parcelas} x de ${brl(Math.round(cfg.principal.preco * cfg.juros_mes / (1 - Math.pow(1 + cfg.juros_mes, -cfg.max_parcelas)) * 100) / 100)} * no cartão`;
+  if (cfg.pix_exige_cpf) $('#campo-cpf').classList.remove('hide');
+
+  $('#bumps').innerHTML = cfg.bumps.map((b) => `
+    <div class="bump" data-id="${b.id}">
+      <div class="topo">
+        ${b.img ? `<img class="thumb" src="${b.img}" alt="">` : '<div class="thumb">🎵</div>'}
+        <div>
+          <div class="titulo">${b.nome}</div>
+          <div class="chamada">${b.chamada}</div>
+          <div class="sub">${b.subtexto}</div>
+          <div class="escassez">Disponível apenas neste momento da compra</div>
+          <div class="valores">
+            <span class="de">${brl(b.preco_de)}</span>
+            <span class="off">↓ ${Math.round((1 - b.preco / b.preco_de) * 100)}%</span>
+            <span class="por">${brl(b.preco)}</span>
+          </div>
+        </div>
+      </div>
+      <label class="barra"><input type="checkbox" data-id="${b.id}"><span>Adicionar produto</span></label>
+    </div>`).join('');
+
+  document.querySelectorAll('.bump input').forEach((el) => {
+    el.addEventListener('change', () => {
+      el.checked ? marcados.add(el.dataset.id) : marcados.delete(el.dataset.id);
+      el.closest('.bump').classList.toggle('on', el.checked);
+      detalhes();
+    });
+  });
+  detalhes();
+
+  // ViewContent: a vitrine do checkout terminou de montar
+  try {
+    fbq('track', 'ViewContent', {
+      content_ids: [cfg.principal.id],
+      content_type: 'product',
+      value: cfg.principal.preco,
+      currency: 'BRL'
+    }, { eventID: 'vc.' + window.tdvAgora().id });
+  } catch (e) {}
+});
+
+function valorParcela(total, n) {
+  if (n <= 1 || !CFG.juros_mes) return total;
+  const i = CFG.juros_mes;
+  return total * i / (1 - Math.pow(1 + i, -n));
+}
+function montarParcelas() {
+  if (!CFG) return;
+  const sel = $('#parcelas'); const atual = sel.value || '1';
+  const t = total();
+  let h = '';
+  for (let n = 1; n <= (CFG.max_parcelas || 12); n++) {
+    const p = Math.round(valorParcela(t, n) * 100) / 100;
+    h += `<option value="${n}">${n} x de ${brl(p)}${n > 1 ? ' *' : ''}</option>`;
+  }
+  sel.innerHTML = h;
+  sel.value = atual <= (CFG.max_parcelas || 12) ? atual : '1';
+}
+
+function total() {
+  let t = CFG.principal.preco;
+  CFG.bumps.forEach((b) => { if (marcados.has(b.id)) t += b.preco; });
+  return t;
+}
+function detalhes() {
+  if (!CFG) return;
+  let h = `<div class="li"><b>${CFG.principal.nome_completo}</b><span>${brl(CFG.principal.preco)}</span></div>`;
+  CFG.bumps.forEach((b) => {
+    if (marcados.has(b.id)) h += `<div class="li"><b>${b.nome}</b><span>${brl(b.preco)}</span></div>`;
+  });
+  h += `<div class="tot"><span>Total de</span><span>${brl(total())}</span></div>`;
+  $('#detalhes').innerHTML = h;
+  montarParcelas();
+}
+
+// metodo de pagamento
+function selecionar(m) {
+  metodo = m;
+  $('#box-pix').classList.toggle('on', m === 'pix');
+  $('#box-cartao').classList.toggle('on', m === 'cartao');
+  $('#corpo-pix').classList.toggle('hide', m !== 'pix');
+  $('#corpo-cartao').classList.toggle('hide', m !== 'cartao');
+}
+$('#box-pix').querySelector('.cabeca').addEventListener('click', () => selecionar('pix'));
+$('#box-cartao').querySelector('.cabeca').addEventListener('click', () => selecionar('cartao'));
+selecionar('pix');
+
+// mascaras
+const mascara = (el, fn) => el && el.addEventListener('input', () => { el.value = fn(el.value.replace(/\D/g, '')); });
+mascara($('#celular'), (v) => v.length > 10
+  ? v.replace(/(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3')
+  : v.replace(/(\d{0,2})(\d{0,4})(\d{0,4}).*/, (m, a, b, c) => (a ? '(' + a : '') + (b ? ') ' + b : '') + (c ? '-' + c : '')));
+const mcpf = (v) => v.slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+mascara($('#cpf'), mcpf); mascara($('#cpf-cartao'), mcpf);
+mascara($('#cep'), (v) => v.slice(0, 8).replace(/(\d{5})(\d)/, '$1-$2'));
+mascara($('#cartao_numero'), (v) => v.slice(0, 16).replace(/(\d{4})(?=\d)/g, '$1 '));
+mascara($('#cartao_mes'), (v) => v.slice(0, 4).replace(/(\d{2})(\d)/, '$1/$2'));
+mascara($('#cartao_cvv'), (v) => v.slice(0, 4));
+
+$('#cep').addEventListener('blur', async () => {
+  const cep = $('#cep').value.replace(/\D/g, '');
+  if (cep.length !== 8) return;
+  try {
+    const d = await (await fetch(`https://viacep.com.br/ws/${cep}/json/`)).json();
+    if (d.erro) throw 0;
+    enderecoOk = { rua: d.logradouro || 'Sem nome', bairro: d.bairro || 'Centro', cidade: d.localidade, uf: d.uf };
+    $('#endereco-ok').textContent = `${d.logradouro ? d.logradouro + ', ' : ''}${d.bairro ? d.bairro + ', ' : ''}${d.localidade} - ${d.uf}`;
+    $('#endereco-ok').classList.remove('hide');
+  } catch { enderecoOk = null; $('#endereco-ok').classList.add('hide'); }
+});
+
+function alerta(msg) {
+  const e = $('#alerta'); e.textContent = msg; e.classList.remove('hide');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+const param = (n) => new URLSearchParams(location.search).get(n) || '';
+
+$('#btn').addEventListener('click', async () => {
+  $('#alerta').classList.add('hide');
+  if ($('#email').value.trim().toLowerCase() !== $('#email2').value.trim().toLowerCase()) {
+    return alerta('Os dois emails precisam ser iguais.');
+  }
+  const btn = $('#btn'), rotulo = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Processando...';
+
+  const [mes, ano] = ($('#cartao_mes').value || '').split('/');
+  const corpo = {
+    metodo,
+    nome: $('#nome').value, email: $('#email').value, celular: $('#celular').value,
+    cpf: metodo === 'cartao' ? $('#cpf-cartao').value : $('#cpf').value,
+    bumps: [...marcados],
+    utm_source: param('utm_source'), utm_campaign: param('utm_campaign'),
+    utm_content: param('utm_content'), src: param('src')
+  };
+  // carimbo de rastreamento: viaja junto com o pedido ate o webhook
+  try {
+    const t = window.tdvAgora();
+    corpo.tdv_id = t.id; corpo.tdv_fbp = t.fbp; corpo.tdv_fbc = t.fbc;
+    corpo.tdv_ua = t.ua; corpo.tdv_url = t.url;
+  } catch (e) {}
+  if (metodo === 'cartao') {
+    if (!enderecoOk) { btn.disabled = false; btn.textContent = rotulo; return alerta('Confira o CEP, não encontrei esse endereço.'); }
+    Object.assign(corpo, {
+      cep: $('#cep').value, numero: $('#numero').value,
+      rua: enderecoOk.rua, bairro: enderecoOk.bairro, cidade: enderecoOk.cidade, uf: enderecoOk.uf,
+      cartao_numero: $('#cartao_numero').value, cartao_mes: mes, cartao_ano: ano,
+      cartao_cvv: $('#cartao_cvv').value, cartao_titular: $('#cartao_titular').value,
+      parcelas: $('#parcelas').value
+    });
+  }
+
+  try {
+    const r = await fetch('/api/pedido', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(corpo) });
+    const d = await r.json();
+    if (!r.ok || d.erro) { btn.disabled = false; btn.textContent = rotulo; return alerta(d.erro || 'Não consegui gerar a cobrança. Tente de novo.'); }
+    $('#email-ok').textContent = corpo.email;
+
+    // guarda o pedido para o Purchase, e dispara o InitiateCheckout
+    window.TDV_PEDIDO = {
+      order_id: d.order_id,
+      valor: total(),
+      ids: [CFG.principal.id].concat([...marcados])
+    };
+    try {
+      fbq('track', 'InitiateCheckout', {
+        content_ids: window.TDV_PEDIDO.ids,
+        content_type: 'product',
+        num_items: window.TDV_PEDIDO.ids.length,
+        value: window.TDV_PEDIDO.valor,
+        currency: 'BRL'
+      }, { eventID: 'ic.' + d.order_id });
+    } catch (e) {}
+
+    if (d.pago) return concluir();
+    if (metodo === 'pix') {
+      $('#etapa1').classList.add('hide');
+      $('#pix').classList.remove('hide');
+      $('#qr-txt').textContent = d.qr_code;
+      // a imagem oficial da Pagar.me e a fonte primaria; o gerador externo so entra se ela faltar
+      const img = $('#qr-img');
+      img.onerror = () => { img.onerror = null; img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=440x440&margin=0&data=' + encodeURIComponent(d.qr_code); };
+      img.src = d.qr_code_url || ('https://api.qrserver.com/v1/create-qr-code/?size=440x440&margin=0&data=' + encodeURIComponent(d.qr_code));
+      window.scrollTo({ top: 0 });
+      vigiar(d.order_id);
+    } else {
+      btn.disabled = false; btn.textContent = rotulo;
+      alerta('Pagamento não aprovado pelo banco. Confira os dados do cartão ou pague com Pix.');
+    }
+  } catch {
+    btn.disabled = false; btn.textContent = rotulo;
+    alerta('Falha de conexão. Confira sua internet e tente de novo.');
+  }
+});
+
+$('#btn-copiar').addEventListener('click', async () => {
+  const t = $('#qr-txt').textContent;
+  try { await navigator.clipboard.writeText(t); } catch {
+    const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); document.execCommand('copy'); a.remove();
+  }
+  $('#btn-copiar').textContent = 'Código copiado';
+  setTimeout(() => { $('#btn-copiar').textContent = 'Copiar código Pix'; }, 2500);
+});
+
+function vigiar(orderId) {
+  timer = setInterval(async () => {
+    try {
+      const d = await (await fetch('/api/status?order_id=' + orderId)).json();
+      if (d.pago) { clearInterval(timer); concluir(); }
+    } catch {}
+  }, 4000);
+}
+function concluir() {
+  if (timer) clearInterval(timer);
+
+  // Purchase de NAVEGADOR. O eventID e o order_id, o mesmo que o servidor usa,
+  // entao o Meta deduplica os dois e conta uma venda so. Dispara uma vez por pagina.
+  try {
+    const p = window.TDV_PEDIDO;
+    if (p && p.order_id && !window.TDV_PURCHASE_ENVIADO) {
+      window.TDV_PURCHASE_ENVIADO = true;
+      fbq('track', 'Purchase', {
+        content_ids: p.ids,
+        content_type: 'product',
+        num_items: p.ids.length,
+        value: p.valor,
+        currency: 'BRL',
+        order_id: p.order_id
+      }, { eventID: p.order_id });
+    }
+  } catch (e) {}
+
+  $('#etapa1').classList.add('hide');
+  $('#pix').classList.add('hide');
+  $('#sucesso').classList.remove('hide');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
