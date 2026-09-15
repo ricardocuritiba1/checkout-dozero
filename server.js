@@ -355,7 +355,17 @@ function montarPurchase(evento) {
 
   return {
     event_name: 'Purchase',
-    event_time: Math.floor(Date.parse(evento.pago_em || new Date().toISOString()) / 1000),
+    // O Meta RECUSA evento com data no futuro. Se o paid_at vier sem fuso e for
+    // lido com deslocamento, o Purchase inteiro seria descartado em silencio.
+    // Por isso o valor e limitado ao instante atual e a janela de 7 dias.
+    event_time: (function () {
+      const agora = Math.floor(Date.now() / 1000);
+      const lido = Math.floor(Date.parse(evento.pago_em || '') / 1000);
+      if (isNaN(lido)) return agora;
+      if (lido > agora) return agora;                       // nunca no futuro
+      if (agora - lido > 6 * 24 * 3600) return agora - 6 * 24 * 3600; // nunca fora da janela
+      return lido;
+    })(),
     event_id: evento.order_id,
     action_source: 'website',
     // url vazia ja rendeu restricao de pixel uma vez. Nunca deixar vazio.
