@@ -493,9 +493,30 @@ function detalhes() {
   CFG.bumps.forEach((b) => {
     if (marcados.has(b.id)) h += `<div class="li"><b>${b.nome}</b><span>${brl(b.preco)}</span></div>`;
   });
-  h += `<div class="tot"><span>Total de</span><span>${brl(total())}</span></div>`;
+  h += `<div id="linha-total"></div>`;
   $('#detalhes').innerHTML = h;
   montarParcelas();
+  atualizarTotal();
+}
+
+// O que aparece logo acima do botao de comprar.
+// No cartao parcelado mostra a PARCELA em destaque, com o total com juros embaixo,
+// para o comprador nao levar susto na fatura.
+function atualizarTotal() {
+  const alvo = $('#linha-total');
+  if (!alvo || !CFG) return;
+  const base = total();
+  const n = parseInt(($('#parcelas') || {}).value || '1', 10);
+
+  if (metodo === 'cartao' && n > 1) {
+    const parcela = Math.round(valorParcela(base, n) * 100) / 100;
+    const comJuros = Math.round(parcela * n * 100) / 100;
+    alvo.innerHTML =
+      `<div class="tot"><span>Total de</span><span>${n} x de ${brl(parcela)}</span></div>` +
+      `<div class="ajuda" style="text-align:right;margin-top:4px">${brl(comJuros)} no total, com juros do parcelamento</div>`;
+  } else {
+    alvo.innerHTML = `<div class="tot"><span>Total de</span><span>${brl(base)}</span></div>`;
+  }
 }
 
 // metodo de pagamento
@@ -505,7 +526,9 @@ function selecionar(m) {
   $('#box-cartao').classList.toggle('on', m === 'cartao');
   $('#corpo-pix').classList.toggle('hide', m !== 'pix');
   $('#corpo-cartao').classList.toggle('hide', m !== 'cartao');
+  atualizarTotal();
 }
+$('#parcelas').addEventListener('change', atualizarTotal);
 $('#box-pix').querySelector('.cabeca').addEventListener('click', () => selecionar('pix'));
 $('#box-cartao').querySelector('.cabeca').addEventListener('click', () => selecionar('cartao'));
 selecionar('pix');
