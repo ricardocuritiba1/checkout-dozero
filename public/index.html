@@ -238,7 +238,7 @@ button.cta:disabled{opacity:.6;cursor:default}
         <input id="celular" type="tel" inputmode="numeric" autocomplete="tel" placeholder="(11) 96123-4567" maxlength="16">
       </div>
     </div>
-    <div class="campo hide" id="campo-cpf">
+    <div class="campo" id="campo-cpf">
       <label for="cpf">CPF</label>
       <input id="cpf" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
     </div>
@@ -276,10 +276,6 @@ button.cta:disabled{opacity:.6;cursor:default}
         <div class="campo">
           <label for="parcelas">Selecione o número de parcelas</label>
           <select id="parcelas"></select>
-        </div>
-        <div class="campo">
-          <label for="cpf-cartao">CPF do titular</label>
-          <input id="cpf-cartao" type="text" inputmode="numeric" placeholder="000.000.000-00" maxlength="14">
         </div>
         <div class="dupla">
           <div class="campo">
@@ -349,7 +345,7 @@ fetch('/api/produtos').then(r => r.json()).then((cfg) => {
   $('#p-desc').textContent = cfg.principal.descricao;
   const p2 = Math.round(cfg.principal.preco * cfg.juros_mes / (1 - Math.pow(1 + cfg.juros_mes, -2)) * 100) / 100;
   $('#p-parcela').textContent = `ou em ${cfg.max_parcelas} x de ${brl(Math.round(cfg.principal.preco * cfg.juros_mes / (1 - Math.pow(1 + cfg.juros_mes, -cfg.max_parcelas)) * 100) / 100)} * no cartão`;
-  if (cfg.pix_exige_cpf) $('#campo-cpf').classList.remove('hide');
+  // o CPF agora e um campo unico, usado tanto no Pix quanto no cartao
 
   $('#bumps').innerHTML = cfg.bumps.map((b) => `
     <div class="bump" data-id="${b.id}">
@@ -442,7 +438,7 @@ mascara($('#celular'), (v) => v.length > 10
   ? v.replace(/(\d{2})(\d{5})(\d{0,4}).*/, '($1) $2-$3')
   : v.replace(/(\d{0,2})(\d{0,4})(\d{0,4}).*/, (m, a, b, c) => (a ? '(' + a : '') + (b ? ') ' + b : '') + (c ? '-' + c : '')));
 const mcpf = (v) => v.slice(0, 11).replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2');
-mascara($('#cpf'), mcpf); mascara($('#cpf-cartao'), mcpf);
+mascara($('#cpf'), mcpf);
 mascara($('#cep'), (v) => v.slice(0, 8).replace(/(\d{5})(\d)/, '$1-$2'));
 mascara($('#cartao_numero'), (v) => v.slice(0, 16).replace(/(\d{4})(?=\d)/g, '$1 '));
 mascara($('#cartao_mes'), (v) => v.slice(0, 4).replace(/(\d{2})(\d)/, '$1/$2'));
@@ -478,7 +474,7 @@ $('#btn').addEventListener('click', async () => {
   const corpo = {
     metodo,
     nome: $('#nome').value, email: $('#email').value, celular: $('#celular').value,
-    cpf: metodo === 'cartao' ? $('#cpf-cartao').value : $('#cpf').value,
+    cpf: $('#cpf').value,
     bumps: [...marcados],
     utm_source: param('utm_source'), utm_campaign: param('utm_campaign'),
     utm_content: param('utm_content'), src: param('src')
