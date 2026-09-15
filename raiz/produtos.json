@@ -1,0 +1,43 @@
+{
+  "principal": {
+    "id": "dozero",
+    "nome": "Do Zero ao Culto em 30 Dias",
+    "nome_completo": "Saia do Absoluto Zero e Toque com Confiança na Igreja - Fundamentos Essenciais (Vitalício)",
+    "descricao": "Mais de 60 videoaulas com passo a passo para sair do ABSOLUTO ZERO e chegar ao nível INTERMEDIÁRIO no Teclado para tocar na igreja. Inclui 60 páginas de Material Didático em PDF, suporte dentro da plataforma e acesso vitalício.",
+    "preco": 19.9,
+    "img": "/img/thumb-dozero.jpg",
+    "cademi_id": "01"
+  },
+  "bumps": [
+    {
+      "id": "ouvido",
+      "nome": "Toque de OUVIDO na igreja - Sem precisar de Cifra (Vitalício)",
+      "chamada": "🎧 SIM! Quero tocar de ouvido na igreja",
+      "subtexto": "Descubra o próximo acorde sem depender de cifra, mesmo sendo iniciante.",
+      "preco": 14.9,
+      "preco_de": 96.42,
+      "img": "/img/thumb-ouvido.jpg",
+      "cademi_id": "02"
+    },
+    {
+      "id": "campos",
+      "nome": "Aprenda Quais Acordes Usar em Cada Louvor Montando Campos Harmônicos (Vitalício)",
+      "chamada": "🎹 SIM! Quero saber quais acordes usar em cada louvor",
+      "subtexto": "Aprenda a escolher os acordes certos sem ficar perdido, mesmo sendo iniciante.",
+      "preco": 14.9,
+      "preco_de": 94.0,
+      "img": "/img/thumb-campos.jpg",
+      "cademi_id": "03"
+    },
+    {
+      "id": "app",
+      "nome": "Do Zero ao Culto APP - Seu Professor de Teclado no Bolso",
+      "chamada": "📱 SIM! Quero treinar pelo app com correção na hora",
+      "subtexto": "Monta escalas e acordes tocando na tela. Errou, ele mostra o porquê na hora e você memoriza.",
+      "preco": 14.9,
+      "preco_de": 149.0,
+      "img": "/img/thumb-app.jpg",
+      "cademi_id": "04"
+    }
+  ]
+}

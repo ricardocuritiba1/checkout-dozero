@@ -48,6 +48,20 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
     };
   };
 
+  // ALINHAMENTO DO fbp. A landing fica em outro dominio, entao o cookie nao atravessa.
+  // O link decorado traz o fbp da landing na URL. Sem gravar esse valor no cookie aqui,
+  // o fbq cria um fbp NOVO e os eventos de navegador saem com um identificador diferente
+  // do que o servidor manda no CAPI, o que estraga a atribuicao ao anuncio.
+  var valido = /^fb\.\d\.\d+\..+/;
+  var fbpUrl = qs.get('fbp');
+  if (fbpUrl && valido.test(fbpUrl) && cookie('_fbp') !== fbpUrl) {
+    document.cookie = '_fbp=' + fbpUrl + ';path=/;max-age=7776000;SameSite=Lax';
+  }
+  var fbcUrl = qs.get('fbc');
+  if (fbcUrl && valido.test(fbcUrl) && !cookie('_fbc')) {
+    document.cookie = '_fbc=' + fbcUrl + ';path=/;max-age=7776000;SameSite=Lax';
+  }
+
   try {
     fbq('init', window.TDV_PIXEL_ID, { external_id: id });
     fbq('track', 'PageView', {}, { eventID: 'pv.' + id });
@@ -165,6 +179,26 @@ button.cta:hover{background:var(--verde-esc)}
 button.cta:disabled{opacity:.6;cursor:default}
 
 .protegido{text-align:center;font-size:.72rem;color:var(--txt3);margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px}
+
+/* selos de confianca */
+.selos{margin-top:18px;display:grid;gap:8px}
+.selo{display:flex;align-items:center;gap:11px;border:1px solid var(--linha);border-radius:5px;padding:11px 13px;background:#fff}
+.selo .ico{width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;color:var(--verde)}
+.selo .ico svg{width:22px;height:22px;display:block}
+.selo b{display:block;font-size:.83rem;font-weight:700;line-height:1.25}
+.selo span{display:block;font-size:.75rem;color:var(--txt2);margin-top:2px;line-height:1.35}
+
+/* garantia */
+.garantia{margin-top:18px;display:flex;align-items:center;gap:14px;border:1px solid var(--verde);background:var(--verde-claro);border-radius:5px;padding:14px 15px}
+.garantia .medalha{
+  width:62px;height:62px;flex:0 0 62px;border-radius:50%;
+  background:#fff;border:2px solid var(--verde);
+  display:grid;place-content:center;text-align:center;line-height:1
+}
+.garantia .medalha .n{font-size:1.5rem;font-weight:700;color:var(--verde);display:block}
+.garantia .medalha .d{font-size:.53rem;font-weight:700;color:var(--verde);letter-spacing:.06em;text-transform:uppercase;display:block;margin-top:2px}
+.garantia .txt b{display:block;font-size:.88rem;font-weight:700}
+.garantia .txt span{display:block;font-size:.78rem;color:var(--txt2);margin-top:4px;line-height:1.45}
 .rodape{max-width:530px;margin:0 auto;padding:16px 22px 30px;font-size:.72rem;color:var(--txt3);line-height:1.6}
 .rodape a{color:var(--txt3)}
 
@@ -300,6 +334,33 @@ button.cta:disabled{opacity:.6;cursor:default}
 
     <button class="cta" id="btn">Comprar agora</button>
     <div class="protegido">Pagamento seguro processado por <b>Pagar.me</b></div>
+
+    <div class="selos">
+      <div class="selo">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
+        <div><b>Privacidade</b><span>Seus dados sao usados so para liberar o acesso</span></div>
+      </div>
+      <div class="selo">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8.3-8 9.5C7.2 20.3 4 16.5 4 12V6l8-3z"/><path d="M9 12l2 2 4-4"/></svg></div>
+        <div><b>Compra segura</b><span>Pagamento processado pela Pagar.me em ambiente autenticado</span></div>
+      </div>
+      <div class="selo">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div>
+        <div><b>Acesso enviado por email</b><span>Login e senha chegam no email assim que o pagamento cair</span></div>
+      </div>
+      <div class="selo">
+        <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"/></svg></div>
+        <div><b>Acesso vitalicio</b><span>Voce estuda no seu ritmo, sem mensalidade e sem prazo</span></div>
+      </div>
+    </div>
+
+    <div class="garantia">
+      <div class="medalha"><span class="n">7</span><span class="d">dias</span></div>
+      <div class="txt">
+        <b>Garantia de 7 dias</b>
+        <span>Entre, assista as aulas e toque. Se nao for para voce, e so pedir o reembolso dentro de 7 dias e receber todo o valor de volta.</span>
+      </div>
+    </div>
   </div>
 
   <!-- ETAPA 2: PIX -->
@@ -528,7 +589,7 @@ $('#btn').addEventListener('click', async () => {
       img.onerror = () => { img.onerror = null; img.src = 'https://api.qrserver.com/v1/create-qr-code/?size=440x440&margin=0&data=' + encodeURIComponent(d.qr_code); };
       img.src = d.qr_code_url || ('https://api.qrserver.com/v1/create-qr-code/?size=440x440&margin=0&data=' + encodeURIComponent(d.qr_code));
       window.scrollTo({ top: 0 });
-      vigiar(d.order_id);
+      vigiar(d.order_id, d.expira_em);
     } else {
       btn.disabled = false; btn.textContent = rotulo;
       alerta('Pagamento não aprovado pelo banco. Confira os dados do cartão ou pague com Pix.');
@@ -548,13 +609,29 @@ $('#btn-copiar').addEventListener('click', async () => {
   setTimeout(() => { $('#btn-copiar').textContent = 'Copiar código Pix'; }, 2500);
 });
 
-function vigiar(orderId) {
+function vigiar(orderId, expiraEm) {
+  // sem isso, passada a hora de validade o comprador ficava com o carregador
+  // girando para sempre, sem entender que o codigo tinha vencido
+  const limite = Date.parse(expiraEm || '') || (Date.now() + 3600000);
   timer = setInterval(async () => {
+    if (Date.now() > limite) { clearInterval(timer); pixExpirou(); return; }
     try {
       const d = await (await fetch('/api/status?order_id=' + orderId)).json();
       if (d.pago) { clearInterval(timer); concluir(); }
     } catch {}
   }, 4000);
+}
+
+function pixExpirou() {
+  const area = document.querySelector('#pix .esperando');
+  if (!area) return;
+  area.style.display = 'block';
+  area.innerHTML = '<b>Este codigo Pix expirou.</b><div style="margin-top:6px">Gere um novo para concluir a sua compra.</div>';
+  const b = document.createElement('button');
+  b.className = 'cta';
+  b.textContent = 'Gerar novo codigo Pix';
+  b.addEventListener('click', () => location.reload());
+  area.appendChild(b);
 }
 function concluir() {
   if (timer) clearInterval(timer);

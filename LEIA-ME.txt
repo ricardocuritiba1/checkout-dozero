@@ -1,0 +1,18 @@
+COMO SUBIR NO GITHUB
+====================
+
+Sao 3 envios. Cada pasta aqui dentro corresponde a um destino diferente
+no repositorio. Arquivo no lugar errado quebra o build.
+
+1) pasta "raiz"        -> server.js e produtos.json
+   https://github.com/ricardocuritiba1/checkout-dozero/upload/main
+
+2) pasta "public"      -> index.html
+   https://github.com/ricardocuritiba1/checkout-dozero/upload/main/public
+
+3) pasta "public-img"  -> as 3 imagens, pode arrastar as tres juntas
+   https://github.com/ricardocuritiba1/checkout-dozero/upload/main/public/img
+
+Em cada tela: arraste os arquivos, role ate o fim, clique em "Commit changes".
+
+Arraste os ARQUIVOS de dentro de cada pasta, nunca a pasta em si.
