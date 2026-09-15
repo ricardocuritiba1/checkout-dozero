@@ -650,15 +650,31 @@ $('#btn-copiar').addEventListener('click', async () => {
 });
 
 function vigiar(orderId, expiraEm) {
-  // sem isso, passada a hora de validade o comprador ficava com o carregador
-  // girando para sempre, sem entender que o codigo tinha vencido
-  const limite = Date.parse(expiraEm || '') || (Date.now() + 3600000);
+  // Sem isso, passada a validade o comprador ficava com o carregador girando
+  // para sempre, sem entender que o codigo tinha vencido.
+  //
+  // O limite NUNCA pode cair antes da hora: se a data vier em formato inesperado
+  // ou com fuso deslocado, o comprador veria "expirou" com um QR bom na mao e
+  // desistiria da compra. Por isso o valor da Pagar.me so e aceito quando cai
+  // dentro de uma janela plausivel; fora disso vale 1 hora a partir de agora.
+  const agora = Date.now();
+  const MIN = agora + 5 * 60 * 1000;          // nunca menos de 5 minutos
+  const MAX = agora + 25 * 60 * 60 * 1000;    // nem mais de 25 horas
+  const lido = Date.parse(expiraEm || '');
+  let limite = agora + 3600000;
+  if (!isNaN(lido) && lido > MIN && lido < MAX) limite = lido;
+
+  const GRACA = 3 * 60 * 1000;                // ainda consulta 3 min apos o limite
+
   timer = setInterval(async () => {
-    if (Date.now() > limite) { clearInterval(timer); pixExpirou(); return; }
+    const venceu = Date.now() > limite + GRACA;
     try {
       const d = await (await fetch('/api/status?order_id=' + orderId)).json();
-      if (d.pago) { clearInterval(timer); concluir(); }
+      if (d.pago) { clearInterval(timer); return concluir(); }
     } catch {}
+    // so declara expirado DEPOIS de uma ultima consulta, para nao mostrar erro
+    // a quem acabou de pagar em cima da hora
+    if (venceu) { clearInterval(timer); pixExpirou(); }
   }, 4000);
 }
 
