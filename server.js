@@ -25,7 +25,13 @@ const META_PIXEL_ID   = process.env.META_PIXEL_ID   || '';     // 12951750478980
 const META_CAPI_TOKEN = process.env.META_CAPI_TOKEN || '';     // token do Gerenciador de Eventos
 const META_TEST_CODE  = process.env.META_TEST_EVENT_CODE || '';// so durante o teste, apagar depois
 const META_API_VER    = process.env.META_API_VERSION || 'v21.0';
-const CHECKOUT_URL    = process.env.CHECKOUT_URL || 'https://pay.dozeroaoculto.com.br/';                       // Configuracoes > Integracoes > Chave de API
+const CHECKOUT_URL    = process.env.CHECKOUT_URL || 'https://pay.dozeroaoculto.com.br/';
+// ---- limite de tentativas na criacao de pedido ----
+// Folgado de proposito: no Brasil varios compradores saem pelo mesmo IP (CGNAT das
+// operadoras de celular). Limite apertado bloquearia cliente de verdade.
+// RATE_MAX=0 desliga a protecao sem precisar mexer no codigo.
+const RATE_MAX = parseInt(process.env.RATE_MAX || '10', 10);
+const RATE_JANELA_MIN = parseInt(process.env.RATE_JANELA_MIN || '10', 10);                       // Configuracoes > Integracoes > Chave de API
 
 if (!PAGARME_KEY) { console.error('FALTA a variavel PAGARME_SECRET_KEY'); process.exit(1); }
 
@@ -122,6 +128,23 @@ function montarCliente(d, comEndereco) {
     };
   }
   return cliente;
+}
+
+const tentativasPorIp = new Map();
+function passouDoLimite(ip) {
+  if (!ip || RATE_MAX <= 0) return false;
+  const agora = Date.now();
+  const janela = RATE_JANELA_MIN * 60000;
+  const lista = (tentativasPorIp.get(ip) || []).filter((t) => agora - t < janela);
+  lista.push(agora);
+  tentativasPorIp.set(ip, lista);
+  // faxina para o mapa nao crescer para sempre
+  if (tentativasPorIp.size > 5000) {
+    for (const [k, v] of tentativasPorIp) {
+      if (!v.length || agora - v[v.length - 1] > janela) tentativasPorIp.delete(k);
+    }
+  }
+  return lista.length > RATE_MAX;
 }
 
 async function pagarme(rota, metodo, corpo) {
@@ -528,8 +551,13 @@ const server = http.createServer(async (req, res) => {
     }
 
     if (rota === '/api/pedido' && req.method === 'POST') {
+      const ip = ipDoCliente(req);
+      if (passouDoLimite(ip)) {
+        console.error('limite de tentativas atingido', ip);
+        return responder(res, 429, { erro: 'Muitas tentativas seguidas. Espere um minuto e tente de novo.' });
+      }
       const dados = await lerCorpo(req);
-      const r = await criarPedido(dados, ipDoCliente(req));
+      const r = await criarPedido(dados, ip);
       return responder(res, r.erro ? (r.status || 400) : 200, r);
     }
 
@@ -615,6 +643,10 @@ const server = http.createServer(async (req, res) => {
 
     // diagnostico: quantas vendas pagas ainda nao foram entregues
     if (rota === '/api/pendentes' && req.method === 'GET') {
+      // expunha order_id, email e valor de venda sem autenticacao nenhuma
+      const h = req.headers['authorization'] || '';
+      const esperado = 'Basic ' + Buffer.from(WEBHOOK_USER + ':' + WEBHOOK_PASS).toString('base64');
+      if (!WEBHOOK_USER || h !== esperado) { res.writeHead(401); return res.end(); }
       const db = lerDb();
       const pend = Object.values(db).filter((p) => p.status === 'paid' && !p.entregue);
       return responder(res, 200, {
