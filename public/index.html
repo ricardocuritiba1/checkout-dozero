@@ -643,10 +643,11 @@ function pixExpirou() {
   const area = document.querySelector('#pix .esperando');
   if (!area) return;
   area.style.display = 'block';
-  area.innerHTML = '<b>Este codigo Pix expirou.</b><div style="margin-top:6px">Gere um novo para concluir a sua compra.</div>';
+  area.innerHTML = '<b>Este c\u00f3digo Pix expirou.</b><div style="margin-top:6px">Gere um novo para concluir a sua compra.</div>';
   const b = document.createElement('button');
   b.className = 'cta';
-  b.textContent = 'Gerar novo codigo Pix';
+  b.style.marginTop = '12px';
+  b.textContent = 'Gerar novo c\u00f3digo Pix';
   b.addEventListener('click', () => location.reload());
   area.appendChild(b);
 }
