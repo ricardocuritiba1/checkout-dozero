@@ -53,14 +53,31 @@ document,'script','https://connect.facebook.net/en_US/fbevents.js');
   // o fbq cria um fbp NOVO e os eventos de navegador saem com um identificador diferente
   // do que o servidor manda no CAPI, o que estraga a atribuicao ao anuncio.
   var valido = /^fb\.\d\.\d+\..+/;
+
+  // O pixel grava _fbp no DOMINIO RAIZ (.dozeroaoculto.com.br). Gravar no host
+  // (pay.dozeroaoculto.com.br) cria um segundo cookie de mesmo nome em vez de
+  // substituir, e o navegador entrega o do dominio raiz primeiro. Por isso a
+  // gravacao tem que ser no mesmo escopo que o pixel usa.
+  var raiz = (function () {
+    var p = location.hostname.split('.');
+    if (p.length < 3) return location.hostname;
+    var dois = ['com', 'net', 'org', 'gov', 'edu'];
+    var n = (p[p.length - 1].length === 2 && dois.indexOf(p[p.length - 2]) !== -1) ? 3 : 2;
+    return p.slice(-n).join('.');
+  })();
+
+  function gravarCookie(nome, valor) {
+    var base = nome + '=' + valor + ';path=/;max-age=7776000;SameSite=Lax';
+    document.cookie = nome + '=;path=/;max-age=0';            // limpa o duplicado do host
+    document.cookie = base + ';domain=.' + raiz;              // grava no escopo do pixel
+    if (cookie(nome) !== valor) document.cookie = base;       // rede de seguranca
+  }
+
   var fbpUrl = qs.get('fbp');
-  if (fbpUrl && valido.test(fbpUrl) && cookie('_fbp') !== fbpUrl) {
-    document.cookie = '_fbp=' + fbpUrl + ';path=/;max-age=7776000;SameSite=Lax';
-  }
+  if (fbpUrl && valido.test(fbpUrl) && cookie('_fbp') !== fbpUrl) gravarCookie('_fbp', fbpUrl);
+
   var fbcUrl = qs.get('fbc');
-  if (fbcUrl && valido.test(fbcUrl) && !cookie('_fbc')) {
-    document.cookie = '_fbc=' + fbcUrl + ';path=/;max-age=7776000;SameSite=Lax';
-  }
+  if (fbcUrl && valido.test(fbcUrl) && cookie('_fbc') !== fbcUrl) gravarCookie('_fbc', fbcUrl);
 
   try {
     fbq('init', window.TDV_PIXEL_ID, { external_id: id });
